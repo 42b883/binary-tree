@@ -1,26 +1,26 @@
 #include <iostream>
 #include <cstdlib>
+
 using namespace std;
+
 struct tree {
 	int info;
 	tree *Left, *Right;
 };
-tree* root;
-class Binary_tree {
-public:
-	Binary_tree();
-	void insert1(int);
-	tree* insert2(tree*, tree*);
-	void Delete(int);
-	void pretrav(tree*);
-	void intrav(tree*);
-	void posttrav(tree*);
-};
-Binary_tree::Binary_tree()
-{
-	root = NULL;
-}
-tree* Binary_tree::insert2(tree* temp, tree* newnode)
+tree* root = NULL;
+
+void insert1(int);
+tree* insert2(tree*, tree*);
+void Delete(int);
+void pretrav(tree*);
+void intrav(tree*);
+void posttrav(tree*);
+void print(tree*);
+int countNode(tree*);
+
+
+
+tree* insert2(tree* temp, tree* newnode)
 {
 	if (temp == NULL) {
 		temp = newnode;
@@ -37,7 +37,7 @@ tree* Binary_tree::insert2(tree* temp, tree* newnode)
 	}
 	return temp;
 }
-void Binary_tree::insert1(int n)
+void insert1(int n)
 {
 	tree *temp = root, *newnode;
 	newnode = new tree;
@@ -46,7 +46,7 @@ void Binary_tree::insert1(int n)
 	newnode->info = n;
 	root = insert2(temp, newnode);
 }
-void Binary_tree::pretrav(tree* t = root)
+void pretrav(tree* t = root)
 {
 	if (root == NULL) {
 		cout << "Nothing to display";
@@ -57,7 +57,7 @@ void Binary_tree::pretrav(tree* t = root)
 		pretrav(t->Right);
 	}
 }
-void Binary_tree::intrav(tree* t = root)
+void intrav(tree* t = root)
 {
 	if (root == NULL) {
 		cout << "Nothing to display";
@@ -68,7 +68,7 @@ void Binary_tree::intrav(tree* t = root)
 		intrav(t->Right);
 	}
 }
-void Binary_tree::posttrav(tree* t = root)
+void posttrav(tree* t = root)
 {
 	if (root == NULL) {
 		cout << "Nothing to display";
@@ -79,7 +79,67 @@ void Binary_tree::posttrav(tree* t = root)
 		cout << t->info << " ";
 	}
 }
-void Binary_tree::Delete(int key)
+
+void print(tree* t = root)
+{
+	if (root == NULL) {
+		cout << "Nothing to display";
+	}
+	else {
+		intrav(t->Right);
+		cout << t->info << " ";
+		intrav(t->Left);
+	}
+}
+
+int countNode(tree* t = root)
+{
+	int count = 0;
+	if (t) {
+		count++;
+		count = count + countNode(t->Left);
+		count = count + countNode(t->Right);
+	}
+	return count;
+
+}
+
+int countLeaf(tree* t = root)
+{
+	if (t == NULL)
+		return 0;
+	if (t->Left == NULL && t->Right == NULL)
+		return 1;
+	else
+		return countLeaf(t->Left) +
+		countLeaf(t->Right);
+}
+
+
+//void print(tree *root, int space)
+//{
+//	// Base case 
+//	if (root == NULL)
+//		return;
+//
+//	// Increase distance between levels 
+//	space += COUNT;
+//
+//	// Process right child first 
+//	print(root->Right, space);
+//
+//	// Print current node after space 
+//	// count 
+//	cout<<"\n";
+//	for (int i = COUNT; i < space; i++)
+//		printf(" ");
+//	cout<<" "<< root->info;
+//
+//	// Process left child 
+//	print(root->Left, space);
+//}
+
+void Delete(int key)
 {
 	tree *temp = root, *parent = root, *marker;
 	if (temp == NULL)
@@ -162,39 +222,51 @@ void Binary_tree::Delete(int key)
 }
 int main()
 {
-	Binary_tree bt;
-	int choice, n, key;
+
+	int choice, n, key, level, s = 0;
 	while (1) {
-		cout << "\n\t1. Insert\n\t2. Delete\n\t3. Preorder Traversal\n\t4. Inorder Treversal\n\t5. Postorder Traversal\n\t6. Exit" << endl;
+		cout << "\n\t1. Insert\n\t2. Delete\n\t3. Preorder Traversal\n\t4. Inorder Treversal\n\t5. Postorder Traversal\n\t6. Print\n\t7. Count of Nodes\n\t8. Count of Leaves\n\t9. Search\n\t10. Destruct.\n\t11 Exit" << endl;
 		cout << "Enter your choice: ";
 		cin >> choice;
 		switch (choice) {
 		case 1:
 			cout << "Enter item: ";
 			cin >> n;
-			bt.insert1(n);
+			insert1(n);
 			break;
 		case 2:
 			cout << "Enter element to delete: ";
 			cin >> key;
-			bt.Delete(key);
+			Delete(key);
 			break;
 		case 3:
 			cout << endl;
-			bt.pretrav();
+			pretrav();
 			break;
 		case 4:
 			cout << endl;
-			bt.intrav();
+			intrav();
 			break;
 		case 5:
 			cout << endl;
-			bt.posttrav();
+			posttrav();
 			break;
 		case 6:
+			cout << endl;
+			print();
+			break;
+		case 7:
+			cout << endl;
+			//countNode();
+			cout << "count = " << countNode();
+			break;
+		case 8:
+			cout << endl;
+			cout << "count of leaves: " << countLeaf() << endl;
+			break;
+		case 9:
 			exit(0);
 		}
 	}
-	system("pause");
 	return 0;
 }
